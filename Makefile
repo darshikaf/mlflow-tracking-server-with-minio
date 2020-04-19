@@ -15,7 +15,7 @@ RELEASE_TAG       := $(shell cat VERSION)-$(TS)-$(CI_COMMIT)
 RELEASE_IMAGE     := $(DOCKER_REGISTRY)/$(DOCKER_REPO):$(RELEASE_TAG)
 RELEASE_IMAGE_NO_COMMISH := $(DOCKER_REGISTRY)/$(DOCKER_REPO):$(BUILD_TAG)
 
-SSH_LOCAL_PORT:= 5000
+SSH_LOCAL_PORT:= 5500
 
 all: clean build tag release
 local: clean build tag

@@ -1,0 +1,44 @@
+version: '3.0'
+services: 
+    darkt-minio:
+        image: minio/minio
+        networks: 
+            - mlflow-net
+        container_name: darkt-minio
+        working_dir: "/darkt-minio/storage"
+        volumes:
+            - ~/workspace/com.github/minio:/darkt-minio/storage
+        expose:
+             - "9000"
+        ports:
+            - "9000:9000"
+        environment:
+            MINIO_ACCESS_KEY: "minio_id"
+            MINIO_SECRET_KEY: "minio_key"
+        command: server /darkt-minio/storage
+    darkt-mlflow:
+        image: darkt-mlflow-tracking
+        container_name: "darkt-mlflow-tracking-server"
+        networks: 
+            - mlflow-net
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        depends_on: 
+            - darkt-minio
+        volumes: 
+            - ~/workspace/com.github/mlflow:/mlflow
+        environment:
+            FILE_DIR: /mlflow
+            MLFLOW_S3_ENDPOINT_URL: http://darkt-minio:9000
+            AWS_ACCESS_KEY_ID: "minio_id"
+            AWS_SECRET_ACCESS_KEY: "minio_key"
+            PORT: "5500"
+        expose: 
+            - "5500"
+        ports: 
+            - "5500:5500"
+
+networks: 
+    mlflow-net:
+

@@ -22,14 +22,16 @@ function apprm() {
 }
 
 function app() {
-    apprm "darkt-mlflow-tracking"
+    apprm "mlflow"
     docker run -d \
     --rm \
-    --name darkt-mlflow-tracking-server \
+    --name mlflow-tracking \
     -p ${HOST_PORT}:${HOST_PORT} \
     -e PORT=${HOST_PORT} \
     -e FILE_DIR=/mlflow \
-    -e ARTIFACTS=/artifacts \
+    -e MLFLOW_S3_ENDPOINT_URL=http://darkt-minio:9000 \
+    -e AWS_ACCESS_KEY_ID=minio_id \
+    -e AWS_SECRET_ACCESS_KEY=minio_key \
     ${IID}
     echo "Started mlflow listening to ports ${HOST_PORT}"
 }
